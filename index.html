@@ -79,6 +79,13 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:9px;borde
  .exercise dl{grid-template-columns:95px 1fr}
 }
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 </head>
 <body>
 <div class="app">
@@ -86,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:9px;borde
  <div class="brand"><div class="logo">MS</div><div><h1>Move Strong</h1><div class="sub">24-week couch-to-calisthenics programme</div></div></div>
  <div class="header-actions">
   <label class="toggle btn small"><input id="awakeToggle" type="checkbox"><span class="label">Keep screen awake</span></label>
-  <button class="btn primary" id="quickCoach">Start Coach Mode</button>
+  <button class="btn" id="installApp" style="display:none">Install App</button><button class="btn primary" id="quickCoach">Start Coach Mode</button>
  </div>
 </header>
 <div class="shell">
@@ -587,5 +594,28 @@ document.addEventListener("pointerdown",()=>{if(state.settings.awake)requestWake
 
 function renderAll(){renderToday();renderProgramme();renderLibrary();renderProgress();renderSettings();awakeToggle.checked=state.settings.awake}
 renderAll();setGeneral(state.settings.rest);syncWake();
+
+let deferredInstallPrompt=null;
+const installBtn=document.getElementById('installApp');
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  installBtn.style.display='inline-flex';
+});
+installBtn?.addEventListener('click',async()=>{
+  if(!deferredInstallPrompt)return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  installBtn.style.display='none';
+});
+window.addEventListener('appinstalled',()=>{
+  installBtn.style.display='none';
+  toast('Move Strong installed');
+});
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+}
+
 </script>
 </body></html>
