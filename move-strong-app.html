@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Move Strong — 6 Month Beginner Plan</title>
+<style>
+:root{
+  --bg:#0f1113;
+  --panel:#181c20;
+  --panel2:#20262b;
+  --text:#f5f7f8;
+  --muted:#aab4bd;
+  --accent:#7ebb46;
+  --accent2:#abd16d;
+  --danger:#ff7474;
+  --warn:#ffd166;
+  --border:#2c343a;
+  --shadow:0 12px 32px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:linear-gradient(180deg,#0d0f11,#13171a 45%,#0f1113);
+  color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button,input,select{font:inherit}
+.app{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:98px}
+header{
+  position:sticky;top:0;z-index:20;background:rgba(15,17,19,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);padding:14px 18px 12px
+}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:850;letter-spacing:-.04em;font-size:1.28rem}
+.brand span{color:var(--accent)}
+.small{font-size:.83rem;color:var(--muted)}
+main{padding:18px}
+.hero{
+  background:linear-gradient(135deg,#1a201f,#202821);border:1px solid #33412f;border-radius:22px;padding:20px;
+  box-shadow:var(--shadow);margin-bottom:16px
+}
+.hero h1{font-size:1.75rem;line-height:1.05;margin:5px 0 8px;letter-spacing:-.04em}
+.hero p{color:var(--muted);margin:0;line-height:1.45}
+.progressbar{height:10px;background:#2a302d;border-radius:99px;overflow:hidden;margin-top:14px}
+.progressbar>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 7px 20px rgba(0,0,0,.15)
+}
+.card.complete{border-color:#4e703d;background:linear-gradient(180deg,#18201a,#171b19)}
+.card h2,.card h3{margin:0 0 8px;letter-spacing:-.025em}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:99px;padding:6px 10px;color:var(--muted);font-size:.82rem}
+.pill.good{color:#dfffd2;border-color:#4c6a3f;background:#1f2c1b}
+.cta,.secondary,.ghost,.danger{
+  border:0;border-radius:13px;padding:12px 14px;cursor:pointer;font-weight:750
+}
+.cta{background:var(--accent);color:#10150d}
+.secondary{background:#2b353c;color:var(--text)}
+.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.danger{background:#3a2224;color:#ffd8da;border:1px solid #704044}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.exercise{
+  border-top:1px solid var(--border);padding:14px 0
+}
+.exercise:first-of-type{border-top:0}
+.exercise-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.exercise-title b{font-size:1rem}
+.exercise-meta{color:var(--accent2);font-size:.88rem;margin-top:4px}
+.desc{display:none;color:#c8d0d5;line-height:1.5;margin:10px 0 0}
+.desc.open{display:block}
+.feedback{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.feedback button{padding:8px 10px;border-radius:10px;font-size:.83rem}
+.walkbox{display:flex;align-items:end;gap:8px;margin-top:10px}
+.walknum{font-size:2rem;font-weight:900;letter-spacing:-.05em}
+.walkunit{color:var(--muted);padding-bottom:4px}
+.notice{
+  border-left:4px solid var(--warn);background:#28251a;color:#efe7bd;border-radius:12px;padding:12px 14px;line-height:1.45;font-size:.9rem
+}
+.tabs{
+  position:fixed;bottom:0;left:0;right:0;background:rgba(18,21,23,.96);backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:30;
+  max-width:720px;margin:0 auto;padding-bottom:max(8px,env(safe-area-inset-bottom))
+}
+.tab{background:none;border:0;color:var(--muted);padding:11px 4px 8px;font-size:.76rem;cursor:pointer}
+.tab.active{color:var(--accent2);font-weight:800}
+.tab strong{display:block;font-size:1.15rem;margin-bottom:2px}
+.view{display:none}.view.active{display:block}
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--panel2);border-radius:15px;padding:14px}
+.stat b{display:block;font-size:1.45rem;margin-top:3px}
+.weeklist{display:grid;gap:8px}
+.weekrow{display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.weekrow:last-child{border-bottom:0}
+.coach-overlay{
+  position:fixed;inset:0;background:rgba(4,5,6,.96);z-index:100;display:none;padding:18px;
+  align-items:center;justify-content:center
+}
+.coach-overlay.open{display:flex}
+.coach-card{width:min(640px,100%);background:#171b1e;border:1px solid #354047;border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.coach-count{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.coach-card h2{font-size:2rem;letter-spacing:-.04em;margin:8px 0}
+.timer{font-size:4rem;font-weight:900;letter-spacing:-.07em;text-align:center;margin:24px 0;color:var(--accent2)}
+.coach-desc{color:#c9d2d7;line-height:1.55}
+.coach-nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.settings label{display:block;margin:14px 0 5px;color:var(--muted);font-size:.9rem}
+.settings input,.settings select{
+  width:100%;background:#121618;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px
+}
+.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:#141a11;background:var(--accent2);padding:4px 7px;border-radius:7px;font-weight:900}
+@media(min-width:650px){
+  .grid.two{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="topline">
+    <div>
+      <div class="brand">Move <span>Strong</span></div>
+      <div class="small" id="dateLine"></div>
+    </div>
+    <span class="pill" id="dayPill">Day 1</span>
+  </div>
+</header>
+
+<main>
+<section id="todayView" class="view active">
+  <div class="hero">
+    <div class="small">6-MONTH FOUNDATION PLAN</div>
+    <h1 id="heroTitle">Start small. Build steadily.</h1>
+    <p id="heroCopy">Today is intentionally manageable. Finishing fresh is better than smashing yourself and avoiding tomorrow.</p>
+    <div class="progressbar"><div id="overallBar"></div></div>
+    <div class="row" style="margin-top:9px"><span class="small" id="overallText">Day 1 of 180</span><span class="small" id="streakText">0 day streak</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="card" id="mobilityCard">
+      <div class="row">
+        <div><span class="badge">Morning</span><h2 style="margin-top:8px">Mobility & stretches</h2></div>
+        <span class="pill" id="mobilityTime">~10 min</span>
+      </div>
+      <p class="small">Simple, familiar movements to loosen ankles, hips, back, chest, shoulders and neck.</p>
+      <div id="mobilityList"></div>
+      <div class="actions">
+        <button class="cta" onclick="startCoach('mobility')">▶ Coach me through it</button>
+        <button class="ghost" onclick="completeSection('mobility')">Mark complete</button>
+      </div>
+    </div>
+
+    <div class="card" id="strengthCard">
+      <div class="row">
+        <div><span class="badge" id="sessionBadge">Strength</span><h2 style="margin-top:8px" id="sessionTitle">Beginner strength</h2></div>
+        <span class="pill" id="strengthTime">~12 min</span>
+      </div>
+      <p class="small" id="sessionIntro"></p>
+      <div id="strengthList"></div>
+      <div class="actions">
+        <button class="cta" onclick="startCoach('strength')">▶ Coach me through it</button>
+        <button class="ghost" onclick="completeSection('strength')">Mark complete</button>
+      </div>
+    </div>
+
+    <div class="card" id="walkCard">
+      <div class="row"><div><span class="badge">Daily</span><h2 style="margin-top:8px">Walk</h2></div><span class="pill" id="walkPill">Very easy</span></div>
+      <div class="walkbox"><div class="walknum" id="walkMinutes">5</div><div class="walkunit">minutes</div></div>
+      <p class="small" id="walkCopy">Comfortable pace. You should be able to speak normally. This is your target, not a minimum.</p>
+      <div class="actions">
+        <button class="cta" onclick="completeSection('walk')">✓ Walk done</button>
+        <button class="ghost" onclick="logShortWalk()">I did a shorter walk</button>
+      </div>
+    </div>
+
+    <div class="notice">
+      Stop if you get chest pain, feel faint, develop unusual severe breathlessness, or have sharp/worsening pain. If you're returning to exercise after a long period or have medical concerns, get clinician advice before increasing intensity.
+    </div>
+  </div>
+</section>
+
+<section id="planView" class="view">
+  <div class="card">
+    <h2>How the 6 months build</h2>
+    <p class="small">The plan progresses in phases. Strength advances by ability, not by ego or calendar.</p>
+    <div class="weeklist" id="phaseList"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h2>Push-up pathway</h2>
+    <p class="small">You only move up when the current level feels controlled for all prescribed reps.</p>
+    <div id="pushPath"></div>
+  </div>
+</section>
+
+<section id="progressView" class="view">
+  <div class="statgrid">
+    <div class="stat"><span class="small">Completed days</span><b id="completedDays">0</b></div>
+    <div class="stat"><span class="small">Current streak</span><b id="streakStat">0</b></div>
+    <div class="stat"><span class="small">Walk minutes</span><b id="walkTotal">0</b></div>
+    <div class="stat"><span class="small">Current push level</span><b id="pushLevelStat">1</b></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h2>Today</h2>
+    <div id="todayChecklist" class="small"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h2>Recent days</h2>
+    <div id="recentDays"></div>
+  </div>
+</section>
+
+<section id="settingsView" class="view settings">
+  <div class="card">
+    <h2>Settings</h2>
+    <label>Programme day</label>
+    <input type="number" id="dayInput" min="1" max="180" />
+    <label>Push-up level</label>
+    <select id="pushLevelInput"></select>
+    <label>Walking adjustment</label>
+    <select id="walkAdjust">
+      <option value="0">Standard plan</option>
+      <option value="-2">Reduce each walk by 2 min</option>
+      <option value="-5">Reduce each walk by 5 min</option>
+      <option value="3">Add 3 min</option>
+    </select>
+    <div class="actions">
+      <button class="cta" onclick="saveSettings()">Save settings</button>
+      <button class="danger" onclick="resetApp()">Reset all progress</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<nav class="tabs">
+  <button class="tab active" onclick="showView('today',this)"><strong>☀</strong>Today</button>
+  <button class="tab" onclick="showView('plan',this)"><strong>🗓</strong>Plan</button>
+  <button class="tab" onclick="showView('progress',this)"><strong>✓</strong>Progress</button>
+  <button class="tab" onclick="showView('settings',this)"><strong>⚙</strong>Settings</button>
+</nav>
+</div>
+
+<div class="coach-overlay" id="coachOverlay">
+  <div class="coach-card">
+    <div class="row"><span class="coach-count" id="coachCount">Exercise 1 of 8</span><button class="ghost" onclick="closeCoach()">✕</button></div>
+    <h2 id="coachName"></h2>
+    <div class="exercise-meta" id="coachMeta"></div>
+    <p class="coach-desc" id="coachDesc"></p>
+    <div class="timer" id="timerDisplay">00:20</div>
+    <div class="actions" style="justify-content:center">
+      <button class="secondary" onclick="timerToggle()" id="timerBtn">Start timer</button>
+      <button class="ghost" onclick="resetTimer()">Reset</button>
+    </div>
+    <div class="coach-nav">
+      <button class="ghost" onclick="coachPrev()">← Previous</button>
+      <button class="cta" onclick="coachNext()">Done / Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const mobility = [
+ {name:"Shoulder rolls", dose:"10 forward + 10 backward", sec:40, desc:"Stand or sit tall. Lift both shoulders toward your ears, roll them backwards and down in a slow circle. Do 10, then reverse direction. Keep the movement relaxed rather than forcing a huge circle."},
+ {name:"Gentle neck turns", dose:"5 each side", sec:40, desc:"Look straight ahead. Slowly turn your head to the right until you feel a mild stretch, return to centre, then turn left. Keep your chin level. Do not force the end position."},
+ {name:"Arm circles", dose:"10 each direction", sec:40, desc:"Stand with your arms out slightly from your sides. Make small circles and gradually make them a little larger. Do 10 forwards and 10 backwards. Keep the shoulders relaxed."},
+ {name:"Standing side reach", dose:"20 sec each side", sec:40, desc:"Stand with feet comfortably apart. Raise your right arm and gently reach up and over to the left. Keep both feet planted. You should feel the side of your body lengthen, not pinch. Swap sides."},
+ {name:"Chest stretch", dose:"20–30 sec", sec:25, desc:"Stand beside a wall or doorway. Place one forearm against it with the elbow around shoulder height. Gently turn your body away until you feel a comfortable stretch across the chest and front of the shoulder. Swap sides halfway."},
+ {name:"Supported quad stretch", dose:"20 sec each leg", sec:40, desc:"Hold a sturdy chair or worktop. Bend one knee and bring your heel towards your bottom. Hold your trouser leg, ankle or foot if comfortable. Keep your knees close together and stand tall. If you cannot reach the foot, simply bend the knee as far as comfortable."},
+ {name:"Standing hamstring stretch", dose:"20 sec each leg", sec:40, desc:"Hold support. Put one heel slightly in front with that knee mostly straight. Bend the other knee a little and push your hips back. Keep your back long. Stop when you feel the back of the front thigh gently stretch."},
+ {name:"Wall calf stretch", dose:"20 sec each leg", sec:40, desc:"Face a wall and place both hands on it. Step one foot back. Keep that heel on the floor and the back knee straight. Bend the front knee until you feel the calf of the back leg stretch. Swap sides."},
+ {name:"Hip flexor stretch", dose:"20 sec each side", sec:40, desc:"Take a small split stance while holding support. Gently tuck your pelvis under and shift your weight forward without arching your lower back. You should feel the front of the hip on the rear leg. Swap sides."},
+ {name:"Supported squat hold", dose:"15–20 sec", sec:20, desc:"Hold a sturdy kitchen worktop, rail or heavy chair. Sit your hips back and bend your knees only as far as comfortable, keeping your heels down. Use your arms for support. This can be a shallow squat. Hold, then stand slowly."},
+ {name:"Standing torso turns", dose:"10 each side", sec:45, desc:"Stand with feet hip-width apart and arms loosely across your chest. Turn your upper body gently to the right, return to centre, then left. Keep the movement smooth and within a comfortable range."}
+];
+
+const pushLevels = [
+ {name:"Wall push-up", desc:"Hands on a wall at chest height. Step your feet back a little. Bend your elbows and bring your chest toward the wall, then press away."},
+ {name:"High counter push-up", desc:"Hands on a sturdy kitchen worktop or similarly high surface. Keep your body in one straight line and lower your chest toward the edge."},
+ {name:"Lower counter push-up", desc:"Use a stable surface around hip height. The lower the surface, the harder the push-up."},
+ {name:"Bench / desk push-up", desc:"Use a very stable lower surface. Keep your body straight, lower under control, and press back up."},
+ {name:"Knee push-up", desc:"On the floor with knees down. Keep a straight line from knees through hips to shoulders. Lower your chest between your hands and press up."},
+ {name:"Negative floor push-up", desc:"Start at the top of a full push-up. Lower yourself to the floor slowly over 3–5 seconds. Reset from your knees."},
+ {name:"Full push-up", desc:"Hands slightly wider than shoulders. Keep body straight from head to heels. Lower under control and press back up."}
+];
+
+const phases = [
+ ["Weeks 1–4","Foundation","Very short walks, supported strength, learning movements."],
+ ["Weeks 5–8","Build capacity","More reps, longer walks, slightly harder push variation if ready."],
+ ["Weeks 9–12","Consistency","20–30 minute walks and stronger legs/core."],
+ ["Weeks 13–16","Calisthenics base","More conventional bodyweight sessions; controlled progression."],
+ ["Weeks 17–20","Strength build","Harder variations, more total work, optional brisk walking intervals."],
+ ["Weeks 21–26","Move strong","Aim for confident daily movement and your first controlled full push-ups when ready."]
+];
+
+const state = JSON.parse(localStorage.getItem("moveStrongState") || "{}");
+if(!state.day) state.day=1;
+if(!state.pushLevel) state.pushLevel=1;
+if(!state.walkAdjust) state.walkAdjust=0;
+if(!state.logs) state.logs={};
+if(!state.feedback) state.feedback={};
+
+function save(){ localStorage.setItem("moveStrongState",JSON.stringify(state)); }
+
+function dateKey(){
+ const d=new Date(); return d.toISOString().slice(0,10);
+}
+function todayLog(){
+ const k=dateKey();
+ if(!state.logs[k]) state.logs[k]={mobility:false,strength:false,walk:false,walkMinutes:0,day:state.day};
+ return state.logs[k];
+}
+function walkMinutesForDay(day){
+ const week=Math.ceil(day/7);
+ let base;
+ if(week<=1) base=5;
+ else if(week===2) base=7;
+ else if(week===3) base=10;
+ else if(week===4) base=12;
+ else if(week===5) base=15;
+ else if(week===6) base=18;
+ else if(week===7) base=20;
+ else if(week===8) base=22;
+ else if(week===9) base=25;
+ else if(week===10) base=27;
+ else if(week<=12) base=30;
+ else if(week<=16) base=32;
+ else if(week<=20) base=35;
+ else base=40;
+ return Math.max(3,base+Number(state.walkAdjust||0));
+}
+function strengthSession(day){
+ const dow=(day-1)%7;
+ const phase=Math.ceil(day/28);
+ const reps = phase===1 ? 6 : phase===2 ? 8 : phase===3 ? 10 : phase===4 ? 10 : phase===5 ? 12 : 12;
+ const sets = phase<=2 ? 1 : phase<=4 ? 2 : 3;
+ const push=pushLevels[state.pushLevel-1];
+ const strengthA=[
+  {name:push.name,dose:`${sets} × ${reps}`,sec:45,desc:push.desc},
+  {name:"Sit-to-stand",dose:`${sets} × ${reps}`,sec:50,desc:"Sit near the front of a sturdy chair with feet planted. Lean forward slightly, push through your feet and stand. Sit back down slowly. Use your hands on the chair or thighs if needed."},
+  {name:"Supported calf raise",dose:`${sets} × ${Math.max(8,reps)}`,sec:40,desc:"Hold a sturdy surface. Rise onto the balls of both feet, pause briefly, then lower slowly. Keep your body upright."},
+  {name:"Standing knee raise",dose:`${sets} × ${reps} each`,sec:50,desc:"Hold support. Lift one knee toward waist height, or as high as comfortable, without leaning backwards. Lower slowly and alternate."}
+ ];
+ const strengthB=[
+  {name:"Supported shallow squat",dose:`${sets} × ${reps}`,sec:50,desc:"Hold a sturdy worktop. Sit your hips back and bend your knees only as far as comfortable. Keep your heels down and use your arms for support. Stand by pushing through your feet."},
+  {name:"Wall push-up hold",dose:`${sets} × 15–25 sec`,sec:25,desc:"Set up for a wall push-up and hold your body straight with elbows slightly bent. Keep your tummy gently braced and breathe normally."},
+  {name:"Supported reverse step",dose:`${sets} × ${Math.max(5,reps-2)} each`,sec:55,desc:"Hold support. Step one foot backwards a short distance, lightly bend both knees, then return to standing. Keep it shallow. This is preparation for a reverse lunge, not a deep lunge."},
+  {name:"Standing side leg raise",dose:`${sets} × ${reps} each`,sec:50,desc:"Hold a sturdy surface. Keep toes facing forward and lift one leg a small distance to the side without leaning. Lower slowly."}
+ ];
+ const recovery=[
+  {name:"Easy marching",dose:"2 minutes",sec:120,desc:"March gently on the spot or around the room. Lift your feet only as high as is comfortable. This is circulation, not cardio training."},
+  {name:"Shoulder blade squeeze",dose:"10 reps",sec:40,desc:"Sit or stand tall. Gently draw your shoulder blades back and slightly down, pause for one second, then relax. Do not shrug."},
+  {name:"Heel-to-toe ankle rocks",dose:"10 reps",sec:40,desc:"Hold support. Rock your weight gently toward your toes, then back toward your heels without lifting either foot far from the floor."}
+ ];
+ if(dow===2 || dow===5) return {type:"Recovery",title:"Recovery movement",intro:"No hard strength today. Keep the habit, move gently, and let your muscles recover.",items:recovery};
+ if(dow===0 || dow===3) return {type:"Strength A",title:"Foundation strength A",intro:"Push, stand, calves and simple core/hip control. Stop each set with a little strength still in reserve.",items:strengthA};
+ return {type:"Strength B",title:"Foundation strength B",intro:"Leg strength, supported balance and gentle upper-body work. Nothing should require floor fitness early on.",items:strengthB};
+}
+function renderExercise(x,idx,section){
+ return `<div class="exercise">
+ <div class="exercise-title"><div><b>${x.name}</b><div class="exercise-meta">${x.dose}</div></div>
+ <button class="ghost" style="padding:7px 9px" onclick="toggleDesc('${section}-${idx}')">How?</button></div>
+ <div class="desc" id="desc-${section}-${idx}">${x.desc}</div>
+ ${section==="strength"?`<div class="feedback">
+ <button class="ghost" onclick="feedback('${x.name}','hard')">Too difficult</button>
+ <button class="ghost" onclick="feedback('${x.name}','good')">About right</button>
+ <button class="ghost" onclick="feedback('${x.name}','easy')">Too easy</button></div>`:""}
+ </div>`;
+}
+function toggleDesc(id){document.getElementById("desc-"+id).classList.toggle("open");}
+function feedback(name,val){
+ state.feedback[name]=val;
+ if(name.includes("push") || pushLevels.some(p=>p.name===name)){
+   if(val==="easy" && state.pushLevel<pushLevels.length){ state.pushLevel++; alert("Push-up level moved up one step. You can change it any time in Settings.");}
+   if(val==="hard" && state.pushLevel>1){ state.pushLevel--; alert("Push-up level moved down one step. Good call. Controlled reps beat forced reps.");}
+ }
+ save(); render();
+}
+function completeSection(which){
+ const l=todayLog(); l[which]=true;
+ if(which==="walk" && !l.walkMinutes) l.walkMinutes=walkMinutesForDay(state.day);
+ save(); render();
+}
+function logShortWalk(){
+ const target=walkMinutesForDay(state.day);
+ const val=prompt(`How many minutes did you walk? Today's target is ${target}.`);
+ if(val===null)return;
+ const n=Math.max(1,parseInt(val)||0);
+ const l=todayLog(); l.walk=true;l.walkMinutes=n;save();render();
+}
+function render(){
+ const d=new Date();
+ document.getElementById("dateLine").textContent=d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+ document.getElementById("dayPill").textContent=`Day ${state.day}`;
+ document.getElementById("overallText").textContent=`Day ${state.day} of 180`;
+ document.getElementById("overallBar").style.width=`${Math.min(100,(state.day/180)*100)}%`;
+ document.getElementById("mobilityList").innerHTML=mobility.map((x,i)=>renderExercise(x,i,"mobility")).join("");
+ const session=strengthSession(state.day);
+ document.getElementById("sessionBadge").textContent=session.type;
+ document.getElementById("sessionTitle").textContent=session.title;
+ document.getElementById("sessionIntro").textContent=session.intro;
+ document.getElementById("strengthList").innerHTML=session.items.map((x,i)=>renderExercise(x,i,"strength")).join("");
+ document.getElementById("strengthTime").textContent=session.type==="Recovery"?"~6 min":"~12 min";
+ const wm=walkMinutesForDay(state.day);
+ document.getElementById("walkMinutes").textContent=wm;
+ document.getElementById("walkPill").textContent=wm<=10?"Very easy":wm<=20?"Easy build":"Steady";
+ const l=todayLog();
+ ["mobility","strength","walk"].forEach(s=>document.getElementById(s+"Card").classList.toggle("complete",!!l[s]));
+ const done=[l.mobility,l.strength,l.walk].filter(Boolean).length;
+ document.getElementById("todayChecklist").innerHTML=`Mobility: <b>${l.mobility?"Done":"Not yet"}</b><br>Workout: <b>${l.strength?"Done":"Not yet"}</b><br>Walk: <b>${l.walk?"Done":"Not yet"}</b>`;
+ const logs=Object.entries(state.logs).sort((a,b)=>b[0].localeCompare(a[0]));
+ const completed=logs.filter(([k,v])=>v.mobility&&v.strength&&v.walk).length;
+ document.getElementById("completedDays").textContent=completed;
+ const streak=calcStreak(); document.getElementById("streakText").textContent=`${streak} day streak`;document.getElementById("streakStat").textContent=streak;
+ document.getElementById("walkTotal").textContent=logs.reduce((a,[k,v])=>a+(v.walkMinutes||0),0);
+ document.getElementById("pushLevelStat").textContent=state.pushLevel;
+ document.getElementById("recentDays").innerHTML=logs.slice(0,10).map(([k,v])=>`<div class="weekrow"><span>${new Date(k+"T12:00").toLocaleDateString(undefined,{day:"numeric",month:"short"})}</span><span>Mobility ${v.mobility?"✓":"·"} &nbsp; Workout ${v.strength?"✓":"·"} &nbsp; Walk ${v.walk?"✓":"·"}</span><b>${v.walkMinutes||0}m</b></div>`).join("")||'<p class="small">No days logged yet.</p>';
+ document.getElementById("phaseList").innerHTML=phases.map(p=>`<div class="weekrow"><b>${p[0]}</b><div><b>${p[1]}</b><div class="small">${p[2]}</div></div><span>›</span></div>`).join("");
+ document.getElementById("pushPath").innerHTML=pushLevels.map((p,i)=>`<div class="exercise"><div class="row"><div><b>${i+1}. ${p.name}</b><div class="small">${p.desc}</div></div>${state.pushLevel===i+1?'<span class="pill good">Current</span>':''}</div></div>`).join("");
+ document.getElementById("dayInput").value=state.day;
+ document.getElementById("walkAdjust").value=state.walkAdjust;
+ const sel=document.getElementById("pushLevelInput"); sel.innerHTML=pushLevels.map((p,i)=>`<option value="${i+1}">${i+1}. ${p.name}</option>`).join(""); sel.value=state.pushLevel;
+}
+function calcStreak(){
+ let streak=0; const d=new Date();
+ for(let i=0;i<365;i++){
+   const k=d.toISOString().slice(0,10),l=state.logs[k];
+   if(l&&l.mobility&&l.strength&&l.walk) streak++; else if(i>0) break;
+   d.setDate(d.getDate()-1);
+ }
+ return streak;
+}
+function showView(name,btn){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ document.getElementById(name+"View").classList.add("active");
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); btn.classList.add("active");
+}
+function saveSettings(){
+ state.day=Math.max(1,Math.min(180,parseInt(document.getElementById("dayInput").value)||1));
+ state.pushLevel=parseInt(document.getElementById("pushLevelInput").value);
+ state.walkAdjust=parseInt(document.getElementById("walkAdjust").value);
+ save();render();alert("Settings saved.");
+}
+function resetApp(){
+ if(confirm("Reset all Move Strong progress and settings?")){
+   localStorage.removeItem("moveStrongState"); location.reload();
+ }
+}
+
+// Coach mode
+let coachItems=[],coachIndex=0,timerRemaining=0,timerId=null,coachSection="";
+function startCoach(section){
+ coachSection=section;coachItems=section==="mobility"?mobility:strengthSession(state.day).items;coachIndex=0;openCoach();
+}
+function openCoach(){
+ const x=coachItems[coachIndex];
+ document.getElementById("coachOverlay").classList.add("open");
+ document.getElementById("coachCount").textContent=`Exercise ${coachIndex+1} of ${coachItems.length}`;
+ document.getElementById("coachName").textContent=x.name;
+ document.getElementById("coachMeta").textContent=x.dose;
+ document.getElementById("coachDesc").textContent=x.desc;
+ timerRemaining=x.sec||30;stopTimer();updateTimer();
+}
+function closeCoach(){stopTimer();document.getElementById("coachOverlay").classList.remove("open");}
+function coachNext(){
+ stopTimer();
+ if(coachIndex<coachItems.length-1){coachIndex++;openCoach();}
+ else{completeSection(coachSection);closeCoach();}
+}
+function coachPrev(){if(coachIndex>0){coachIndex--;openCoach();}}
+function timerToggle(){
+ if(timerId){stopTimer();} else {
+  document.getElementById("timerBtn").textContent="Pause";
+  timerId=setInterval(()=>{timerRemaining--;updateTimer();if(timerRemaining<=0){stopTimer();if(navigator.vibrate)navigator.vibrate([150,80,150]);}},1000);
+ }
+}
+function stopTimer(){if(timerId)clearInterval(timerId);timerId=null;document.getElementById("timerBtn").textContent="Start timer";}
+function resetTimer(){stopTimer();timerRemaining=coachItems[coachIndex].sec||30;updateTimer();}
+function updateTimer(){document.getElementById("timerDisplay").textContent=`${String(Math.floor(timerRemaining/60)).padStart(2,"0")}:${String(timerRemaining%60).padStart(2,"0")}`;}
+render();
+</script>
+</body>
+</html>
